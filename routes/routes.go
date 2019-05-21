@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/core/router"
+	"github.com/kataras/iris/websocket"
 )
 
 func RegisterRoutes(router *router.APIBuilder) {
@@ -18,9 +19,12 @@ func RegisterRoutes(router *router.APIBuilder) {
 		OptionsPassthrough: true,
 	}))
 
+	router.Any("/iris-ws.js", websocket.ClientHandler())
+
 	api := router.Party("/api")
 	{
 		api.Post("/", start)
 		api.Get("/ws", W.Handler())
+
 	}
 }
