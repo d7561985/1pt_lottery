@@ -21,6 +21,6 @@ func RegisterRoutes(router *router.APIBuilder) {
 	api := router.Party("/api")
 	{
 		api.Post("/", start)
-		api.Get("/ws", ws())
+		api.Get("/ws", W.Handler())
 	}
 }

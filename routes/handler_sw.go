@@ -1,28 +1,46 @@
 package routes
 
 import (
-	"fmt"
+	"github.com/d7561985/1pt_lottery"
+	"github.com/icrowley/fake"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/websocket"
+	"github.com/rs/zerolog/log"
 )
 
-func ws() iris.Handler {
-	ws := websocket.New(websocket.Config{
+var W *WsController = nil
+
+type WsController struct {
+	ws *websocket.Server
+}
+
+func init() {
+	srv := websocket.New(websocket.Config{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
 	})
 
-	ws.OnConnection(handleConnection)
-	return ws.Handler()
+	W = &WsController{srv}
+	srv.OnConnection(W.handleConnection)
 }
 
-func handleConnection(c websocket.Connection) {
-	// Read events from browser
-	c.On("chat", func(msg string) {
-		// Print the message to the console, c.Context() is the iris's http context.
-		fmt.Printf("%s sent: %s\n", c.Context().RemoteAddr(), msg)
+func (w *WsController) Handler() iris.Handler {
+	return w.ws.Handler()
+}
+
+func (w *WsController) handleConnection(c websocket.Connection) {
+	// register messages
+	c.On(lottery.WsEventEnter, w.enter(c))
+}
+
+// client send event: WsEventEnter - enter
+// return name which was already create by POST form and and all users
+func (w *WsController) enter(c websocket.Connection) websocket.MessageFunc {
+	return func(msg string) {
+		log.Info().Str("ip", c.Context().RemoteAddr()).Str("id", c.ID()).Str("msg", msg).Msg(lottery.WsEventEnter)
+
 		// Write message back to the client message owner:
-		// c.Emit("chat", msg)
-		_ = c.To(websocket.Broadcast).Emit("chat", msg)
-	})
+		_ = c.Emit(lottery.WsEventEnter, fake.FullName())
+		//_ = c.To(websocket.Broadcast).Emit("join", msg)
+	}
 }

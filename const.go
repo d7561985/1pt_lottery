@@ -1,7 +1,11 @@
 package lottery
 
-const(
+const (
 
 	// After creation cookie live time 2h
 	Cookie = "lottery"
+)
+
+var (
+	WsEventEnter = "enter"
 )
