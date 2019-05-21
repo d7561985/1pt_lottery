@@ -13,7 +13,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2 v0.0.0-20190505152737-8914e1cf9164 // indirect
 	github.com/gorilla/websocket v1.4.0 // indirect
-	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428 // indirect
+	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
 	github.com/iris-contrib/blackfriday v2.0.0+incompatible // indirect
 	github.com/iris-contrib/formBinder v0.0.0-20190104093907-fbd5963f41e1 // indirect
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
