@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	"github.com/d7561985/1pt_lottery/persistence"
 	"github.com/d7561985/1pt_lottery/routes"
 	"github.com/d7561985/heroku_boilerplate/pkg/config"
 	"github.com/kataras/iris"
 )
 
 func main() {
+	if err := persistence.InitDB(); err != nil {
+		panic(err)
+	}
+
 	app := iris.Default()
 
 	// expose root `asset` dir  for distributing static files

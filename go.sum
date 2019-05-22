@@ -20,6 +20,8 @@ github.com/corpix/uarand v0.1.0 h1:HgE/0ismPNM4n3z2VeZxzwpMJiN4uSZ+SMpxxvoyffY=
 github.com/corpix/uarand v0.1.0/go.mod h1:SFKZvkcRoLqVRFZ4u25xPmp6m9ktANfbpXZ7SJ0/FNU=
 github.com/d7561985/heroku_boilerplate v0.0.0-20190408083322-713a2899ee42 h1:lORdbO5EVptortkxGDFtPDOFDqkqx4nWWqW+P4Ahi0U=
 github.com/d7561985/heroku_boilerplate v0.0.0-20190408083322-713a2899ee42/go.mod h1:xtWLgWI3+arJdHh09Q5V1TvLxlfy8cM8XFx51N7p/CE=
+github.com/d7561985/heroku_boilerplate v0.0.2 h1:Y8c+is2zb+qOiD5QgmKyZsUR6D1CADsbp/r2qhTKexo=
+github.com/d7561985/heroku_boilerplate v0.0.2/go.mod h1:xtWLgWI3+arJdHh09Q5V1TvLxlfy8cM8XFx51N7p/CE=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 h1:clC1lXBpe2kTj2VHdaIu9ajZQe4kcEY9j0NsnDDBZ3o=
@@ -64,6 +66,8 @@ github.com/klauspost/cpuid v1.2.1/go.mod h1:Pj4uuM528wm8OyEC2QMXAi2YiTZ96dNQPGgo
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/lib/pq v1.1.1 h1:sJZmqHoEaY7f+NPP8pgLB/WxulyR3fewgCM2qaSlBb4=
+github.com/lib/pq v1.1.1/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/magiconair/properties v1.8.0 h1:LLgXmsheXeRoUOBOjtwPQCWIYqM/LU1ayDtDePerRcY=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
 github.com/mattn/goveralls v0.0.2/go.mod h1:8d1ZMHsd7fW6IRPKQh46F2WRpyib5/X4FOpevwGNQEw=
