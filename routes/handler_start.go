@@ -10,7 +10,7 @@ import (
 
 // POST /api/start
 func start(ctx iris.Context) {
-	start := &dto.ResponseStart{}
+	start := &dto.StartRequest{}
 	if err := ctx.ReadJSON(start); err != nil {
 		log.Error().Err(err).Msg("read")
 		ctx.StatusCode(iris.StatusInternalServerError)
@@ -26,4 +26,5 @@ func start(ctx iris.Context) {
 
 	// 2h leave cookie
 	ctx.SetCookieKV(lottery.Cookie, id.String())
+	ctx.JSON(&dto.StartResponse{UUID: id.String()})
 }
