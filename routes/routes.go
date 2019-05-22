@@ -31,7 +31,7 @@ func RegisterRoutes(router *router.APIBuilder) {
 
 	router.Any("/iris-ws.js", websocket.ClientHandler())
 
-	api := router.Party("/api")
+	api := router.Party("/api").AllowMethods(iris.MethodOptions)
 	{
 		api.Post("/", start)
 		api.Get("/ws", W.Handler())
