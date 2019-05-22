@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-func RegisterRoutes(router *router.APIBuilder) {
+func RegisterRoutes(in *router.APIBuilder) {
 	// cors
-	router.Use(cors.New(cors.Options{
+	crs := cors.New(cors.Options{
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
@@ -20,18 +20,20 @@ func RegisterRoutes(router *router.APIBuilder) {
 		// should contain all supported
 		AllowedMethods:     []string{"GET", "DELETE", "POST", "PUT"},
 		OptionsPassthrough: true,
-	}), func(context iris.Context) {
+	})
+
+	r := in.Party("/", crs, func(context iris.Context) {
 		// hack for OPTIONS, no need handle options method.
 		if context.Request().Method != "OPTIONS" {
 			context.Next()
 			return
 		}
 		context.StatusCode(iris.StatusNoContent)
-	})
+	}).AllowMethods(iris.MethodOptions)
 
-	router.Any("/iris-ws.js", websocket.ClientHandler())
+	r.Any("/iris-ws.js", websocket.ClientHandler())
 
-	api := router.Party("/api").AllowMethods(iris.MethodOptions)
+	api := r.Party("/api")
 	{
 		api.Post("/", start)
 		api.Get("/ws", W.Handler())
