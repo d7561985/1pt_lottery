@@ -11,14 +11,14 @@ import (
 // POST /api/start
 func start(ctx iris.Context) {
 	start := &dto.ResponseStart{}
-	if err := ctx.ReadJSON(start); err != nil{
+	if err := ctx.ReadJSON(start); err != nil {
 		log.Error().Err(err).Msg("read")
 		ctx.StatusCode(iris.StatusInternalServerError)
 		return
 	}
 
 	id, err := uuid.NewV4()
-	if err != nil{
+	if err != nil {
 		log.Error().Err(err).Msg("gen uuid")
 		ctx.StatusCode(iris.StatusInternalServerError)
 		return

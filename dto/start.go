@@ -1,5 +1,5 @@
 package dto
 
-type ResponseStart struct{
+type ResponseStart struct {
 	User string `json:"user"`
 }
