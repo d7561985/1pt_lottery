@@ -3,7 +3,6 @@ package persistence
 import (
 	"fmt"
 	"github.com/d7561985/heroku_boilerplate/pkg/database"
-	"github.com/icrowley/fake"
 )
 
 func InitDB() (err error) {
@@ -21,19 +20,6 @@ func InitDB() (err error) {
 CREATE INDEX IF NOT EXISTS idx_competitors_uuid ON competitors(uuid);`)
 	if err != nil {
 		return
-	}
-
-	err = (&Competitor{Name: fake.FullName(), Win: true, UUID: "test"}).Create()
-	c := new(Competitor)
-	err = c.Find("test")
-	fmt.Printf("%#v\n", c)
-
-	list := Competitors{}
-	if err := list.All(); err != nil {
-		panic(err)
-	}
-	for _, c := range list {
-		fmt.Println(c)
 	}
 
 	return

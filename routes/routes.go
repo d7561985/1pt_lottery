@@ -27,6 +27,11 @@ func RegisterRoutes(in *router.APIBuilder) {
 		{
 			admin.Get("/competitors", competitorsList)
 			admin.Delete("/database", dropDatabase)
+			actions := admin.Party("/actions")
+			{
+				actions.Get("/begin", lotteryBegin)
+				actions.Get("/stop", lotteryStop)
+			}
 		}
 	}
 }

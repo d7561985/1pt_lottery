@@ -26,5 +26,5 @@ func start(ctx iris.Context) {
 
 	// 2h leave cookie
 	ctx.SetCookieKV(lottery.Cookie, id.String())
-	ctx.JSON(&dto.StartResponse{UUID: id.String()})
+	_, _ = ctx.JSON(&dto.StartResponse{UUID: id.String()})
 }
