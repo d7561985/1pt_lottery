@@ -10,30 +10,9 @@ import (
 )
 
 func RegisterRoutes(in *router.APIBuilder) {
-	// cors
-	crs := cors.New(cors.Options{
-		AllowedHeaders:   []string{"*"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return true
-		},
-		// should contain all supported
-		AllowedMethods:     []string{"GET", "DELETE", "POST", "PUT"},
-		OptionsPassthrough: true,
-	})
+	in.Any("/iris-ws.js", websocket.ClientHandler())
 
-	r := in.Party("/", crs, func(context iris.Context) {
-		// hack for OPTIONS, no need handle options method.
-		if context.Request().Method != "OPTIONS" {
-			context.Next()
-			return
-		}
-		context.StatusCode(iris.StatusNoContent)
-	}).AllowMethods(iris.MethodOptions)
-
-	r.Any("/iris-ws.js", websocket.ClientHandler())
-
-	api := r.Party("/api")
+	api := in.Party("/api", cors.AllowAll()).AllowMethods(iris.MethodOptions)
 	{
 		api.Post("/", start)
 		api.Get("/ws", W.Handler())
