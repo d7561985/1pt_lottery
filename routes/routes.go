@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/iris-contrib/middleware/cors"
+	"github.com/kataras/iris"
 	"github.com/kataras/iris/core/router"
 	"github.com/kataras/iris/middleware/basicauth"
 	"github.com/kataras/iris/websocket"
@@ -19,7 +20,14 @@ func RegisterRoutes(router *router.APIBuilder) {
 		// should contain all supported
 		AllowedMethods:     []string{"GET", "DELETE", "POST", "PUT"},
 		OptionsPassthrough: true,
-	}))
+	}), func(context iris.Context) {
+		// hack for OPTIONS, no need handle options method.
+		if context.Request().Method != "OPTIONS" {
+			context.Next()
+			return
+		}
+		context.StatusCode(iris.StatusNoContent)
+	})
 
 	router.Any("/iris-ws.js", websocket.ClientHandler())
 
