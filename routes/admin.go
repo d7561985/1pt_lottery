@@ -2,23 +2,25 @@ package routes
 
 import (
 	"github.com/d7561985/1pt_lottery"
+	"github.com/d7561985/1pt_lottery/dto"
 	"github.com/d7561985/1pt_lottery/persistence"
 	"github.com/kataras/iris"
 	"github.com/rs/zerolog/log"
+	"math/rand"
+)
+
+var (
+	Start = false
 )
 
 func competitorsList(ctx iris.Context) {
-	res := persistence.Competitors{}
-	if err := res.All(); err != nil {
-		log.Error().Err(err).Msg("competitorsList")
-		ctx.StatusCode(iris.StatusInternalServerError)
-		return
-	}
-
-	_, _ = ctx.JSON(res)
+	_, _ = ctx.JSON(new(persistence.Competitors).FillByStorage())
 }
 
 func dropDatabase(ctx iris.Context) {
+	// clean storage
+	persistence.S.Clean()
+
 	if err := persistence.Clean(); err != nil {
 		log.Error().Err(err).Msg("dropDatabase")
 		ctx.StatusCode(iris.StatusInternalServerError)
@@ -28,19 +30,43 @@ func dropDatabase(ctx iris.Context) {
 }
 
 func lotteryBegin(ctx iris.Context) {
-	if err := W.Emit(lottery.WsEventBegin, ""); err != nil {
+	if Start {
+		ctx.StatusCode(iris.StatusNotAcceptable)
+		_, _ = ctx.JSON("already started")
+		return
+	}
+	if err := W.BroadCast(&dto.WSEvent{Event: lottery.WsEventBegin}); err != nil {
 		ctx.StatusCode(iris.StatusConflict)
 		log.Error().Err(err).Msg("lotteryBegin")
 		return
 	}
 	ctx.StatusCode(iris.StatusOK)
+	Start = true
 }
 
 func lotteryStop(ctx iris.Context) {
-	if err := W.Emit(lottery.WsEventStop, ""); err != nil {
+	if !Start {
+		ctx.StatusCode(iris.StatusNotAcceptable)
+		_, _ = ctx.JSON("not started yet")
+		return
+	}
+	num, _ := persistence.S.Online()
+	if err := W.BroadCast(&dto.WSNameResponse{
+		WSEvent:     dto.WSEvent{Event: lottery.WsEventStop},
+		Name:        dice(),
+		Competitors: num,
+	}); err != nil {
 		ctx.StatusCode(iris.StatusConflict)
 		log.Error().Err(err).Msg("lotteryStop")
 		return
 	}
+
 	ctx.StatusCode(iris.StatusOK)
+	Start = false
+}
+
+func dice() string {
+	total, list := persistence.S.Online()
+	winner := rand.Int31n(int32(total))
+	return list[winner]
 }

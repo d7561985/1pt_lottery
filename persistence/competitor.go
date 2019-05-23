@@ -3,7 +3,13 @@ package persistence
 import (
 	"fmt"
 	"github.com/d7561985/heroku_boilerplate/pkg/database"
+	"github.com/kataras/iris/core/errors"
 	"github.com/lib/pq"
+)
+
+var (
+	errNotExist = errors.New("not exist")
+	errBadCast  = errors.New("bad cast")
 )
 
 type Competitor struct {
@@ -24,12 +30,30 @@ func (c *Competitor) Create() (err error) {
 	}
 
 	n, err := result.RowsAffected()
-	fmt.Printf("[ROW:%d]%s\n", n, sql)
+	fmt.Printf("[ROW:%d]%s [%d,%q,%q,%t]\n", n, sql, c.DiceID, c.Name, c.UUID, c.Win)
+
+	// add to storage
+	S.Store(c.UUID, *c)
 	return
 }
 
 func (c *Competitor) Find(uuid string) (err error) {
-	rows, err := database.D.Query(`SELECT id, dice_id,name,uuid,win FROM "competitors" WHERE uuid LIKE $1 LIMIT 1`, uuid)
+	i, ok := S.Load(uuid)
+	if !ok {
+		return errNotExist
+	}
+
+	res, ok := i.(Competitor)
+	if !ok {
+		return errBadCast
+	}
+
+	*c = res
+	return
+	/*sql := `SELECT id, dice_id,name,uuid,win FROM "competitors" WHERE uuid LIKE $1 LIMIT 1`
+	fmt.Println(sql, uuid)
+
+	rows, err := database.D.Query(sql, uuid)
 	if err != nil {
 		return
 	}
@@ -41,11 +65,14 @@ func (c *Competitor) Find(uuid string) (err error) {
 		}
 	}
 
-	return
+	return*/
 }
 
 func (l *Competitors) All() (err error) {
-	rows, err := database.D.Query(`SELECT id, dice_id,name,uuid,win FROM "competitors"`)
+	sql := `SELECT id, dice_id,name,uuid,win FROM "competitors"`
+	fmt.Println(sql)
+
+	rows, err := database.D.Query(sql)
 	if err != nil {
 		return
 	}
@@ -60,4 +87,14 @@ func (l *Competitors) All() (err error) {
 	}
 
 	return
+}
+
+func (l *Competitors) FillByStorage() Competitors {
+	S.Range(func(_, value interface{}) bool {
+		if add, ok := value.(Competitor); ok {
+			*l = append(*l, add)
+		}
+		return true
+	})
+	return *l
 }
