@@ -51,11 +51,10 @@ func lotteryStop(ctx iris.Context) {
 		return
 	}
 	num, _ := persistence.S.Online()
-	if err := W.BroadCast(&dto.WSNameResponse{
-		WSEvent:     dto.WSEvent{Event: lottery.WsEventStop},
+	if err := W.BroadCast(&dto.WSEvent{Event: lottery.WsEventStop, Data: &dto.WSNameResponse{
 		Name:        dice(),
 		Competitors: num,
-	}); err != nil {
+	}}); err != nil {
 		ctx.StatusCode(iris.StatusConflict)
 		log.Error().Err(err).Msg("lotteryStop")
 		return

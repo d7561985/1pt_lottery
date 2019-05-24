@@ -22,7 +22,7 @@ func start(ctx iris.Context) {
 	v := validate.Struct(start)
 	if !v.Validate() {
 		ctx.StatusCode(iris.StatusBadRequest)
-		_, _ = ctx.JSON(v.Errors.String())
+		_, _ = ctx.JSON(&dto.WSEvent{Event: lottery.EventError, Data: v.Errors.String()})
 		return
 	}
 

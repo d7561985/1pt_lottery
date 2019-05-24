@@ -6,9 +6,10 @@ const (
 )
 
 var (
+	EventError   = "error"
 	WsEventEnter = "enter"
 	WsEventLeave = "leave"
 	WsList       = "list"
 	WsEventBegin = "begin"
-	WsEventStop  = "stop"
+	WsEventStop  = "winner"
 )

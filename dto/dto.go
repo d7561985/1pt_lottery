@@ -9,16 +9,17 @@ type StartResponse struct {
 }
 
 type WSEvent struct {
-	Event string `json:"event"`
+	Event string      `json:"event"`
+	Data  interface{} `json:"data"`
 }
 
 type WSNameResponse struct {
-	WSEvent
 	Name        string `json:"name"`
 	Competitors int    `json:"competitors"`
 }
 
+// whisper personal response
 type WSListResponse struct {
-	WSEvent
+	Me   string   `json:"me"`
 	List []string `json:"list"`
 }

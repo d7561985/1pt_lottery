@@ -68,18 +68,20 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 
 	total, list := persistence.S.Online()
 	// broadcast to all
-	if err := w.Emit(c, websocket.Broadcast, &dto.WSNameResponse{
-		WSEvent:     dto.WSEvent{Event: lottery.WsEventEnter},
-		Name:        participant.Name,
-		Competitors: total + 1,
+	if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
+		Event: lottery.WsEventEnter,
+		Data: &dto.WSNameResponse{
+			Name:        participant.Name,
+			Competitors: total + 1,
+		},
 	}); err != nil {
 		log.Error().Err(err).Msg("fail send broadcast on connect")
 	}
 
 	// private message
-	if err := w.Emit(c, c.ID(), &dto.WSListResponse{
-		WSEvent: dto.WSEvent{Event: lottery.WsList},
-		List:    list,
+	if err := w.Emit(c, c.ID(), &dto.WSEvent{
+		Event: lottery.WsList,
+		Data:  &dto.WSListResponse{Me: participant.Name, List: list},
 	}); err != nil {
 		log.Error().Err(err).Str("event", lottery.WsList).Msg("whisper fail")
 	}
@@ -92,10 +94,12 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 		persistence.Online.Delete(uid)
 		total, _ := persistence.S.Online()
 
-		if err := w.Emit(c, websocket.Broadcast, &dto.WSNameResponse{
-			WSEvent:     dto.WSEvent{Event: lottery.WsEventLeave},
-			Name:        participant.Name,
-			Competitors: total,
+		if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
+			Event: lottery.WsEventLeave,
+			Data: &dto.WSNameResponse{
+				Name:        participant.Name,
+				Competitors: total,
+			},
 		}); err != nil {
 			log.Error().Err(err).Msg("fail send broadcast on connect")
 		}
