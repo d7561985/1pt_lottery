@@ -6,7 +6,7 @@
 
 Development environment:
 ```
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/lottery?sslmode\=disable
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/lottery?sslmode=disable
 ```
 
 ## Auth
@@ -19,5 +19,5 @@ Default credentials: login: `root`, password: `1root1`
 * GET `/api/ws` - public, ws endpoint
 * GET `/api/admin/competitors` - auth required 
 * DELETE `/api/admin/database` - auth required
-* GET `/api/admin/actions/begin`
-* GET `/api/admin/actions/stop`
+* GET `/api/admin/actions/begin` - auth required
+* GET `/api/admin/actions/stop` - auth required

@@ -72,7 +72,7 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 		Event: lottery.WsEventEnter,
 		Data: &dto.WSNameResponse{
 			Name:        participant.Name,
-			Competitors: total + 1,
+			Competitors: total,
 		},
 	}); err != nil {
 		log.Error().Err(err).Msg("fail send broadcast on connect")
