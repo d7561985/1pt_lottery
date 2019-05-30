@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"github.com/d7561985/1pt_lottery/dto"
 	"github.com/rs/zerolog/log"
 	"sync"
 )
@@ -21,14 +22,14 @@ func (s *Store) Clean() {
 	})
 }
 
-func (s *Store) Online() (num int, res []string) {
+func (s *Store) Online() (num int, res []dto.StartRequest) {
 	Online.Range(func(key, value interface{}) bool {
 		w, ok := value.(Competitor)
 		if !ok {
 			log.Fatal().Interface("value", value).Msg("cast fail")
 		}
 		num++
-		res = append(res, w.Name)
+		res = append(res, dto.StartRequest{User: w.Name, Avatar: w.Avatar})
 		return true
 	})
 	return

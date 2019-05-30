@@ -71,7 +71,10 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 	if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
 		Event: lottery.WsEventEnter,
 		Data: &dto.WSNameResponse{
-			Name:        participant.Name,
+			StartRequest: dto.StartRequest{
+				User:   participant.Name,
+				Avatar: participant.Avatar,
+			},
 			Competitors: total,
 		},
 	}); err != nil {
@@ -97,7 +100,9 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 		if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
 			Event: lottery.WsEventLeave,
 			Data: &dto.WSNameResponse{
-				Name:        participant.Name,
+				StartRequest: dto.StartRequest{
+					User: participant.Name,
+				},
 				Competitors: total,
 			},
 		}); err != nil {

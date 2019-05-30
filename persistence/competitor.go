@@ -15,6 +15,7 @@ var (
 type Competitor struct {
 	ID     int64
 	DiceID uint
+	Avatar string
 	Name   string
 	UUID   string
 	Win    bool

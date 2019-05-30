@@ -1,7 +1,12 @@
 package dto
 
+import (
+	_ "github.com/d7561985/1pt_lottery/pkg/vld"
+)
+
 type StartRequest struct {
-	User string `json:"user" validate:"required|ascii" filter:"trim"`
+	User   string `json:"user" validate:"required|ascii" filter:"trim"`
+	Avatar string `json:"avatar,omitempty" validate:"img2"`
 }
 
 type StartResponse struct {
@@ -14,12 +19,12 @@ type WSEvent struct {
 }
 
 type WSNameResponse struct {
-	Name        string `json:"name"`
-	Competitors int    `json:"competitors"`
+	StartRequest
+	Competitors int `json:"competitors"`
 }
 
 // whisper personal response
 type WSListResponse struct {
-	Me   string   `json:"me"`
-	List []string `json:"list"`
+	Me   string         `json:"me"`
+	List []StartRequest `json:"list"`
 }
