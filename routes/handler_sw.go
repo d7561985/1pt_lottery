@@ -22,8 +22,9 @@ type WsController struct {
 
 func init() {
 	srv := websocket.New(websocket.Config{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
+		ReadBufferSize:    1024,
+		WriteBufferSize:   1024,
+		EnableCompression: true,
 		// EvtMessagePrefix: []byte("123"),
 	})
 
@@ -64,9 +65,9 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 	}
 
 	// register as online with this value we can send private message
-	persistence.Online.Store(uid, *participant)
+	persistence.S.Online.Store(uid, *participant)
 
-	total, list := persistence.S.Online()
+	total, list := persistence.S.GetOnline()
 	// broadcast to all
 	if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
 		Event: lottery.WsEventEnter,
@@ -94,8 +95,8 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 
 	// hook at disconnect
 	c.OnDisconnect(func() {
-		persistence.Online.Delete(uid)
-		total, _ := persistence.S.Online()
+		persistence.S.Online.Delete(uid)
+		total, _ := persistence.S.GetOnline()
 
 		if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
 			Event: lottery.WsEventLeave,

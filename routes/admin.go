@@ -50,7 +50,7 @@ func lotteryStop(ctx iris.Context) {
 		_, _ = ctx.JSON("not started yet")
 		return
 	}
-	num, _ := persistence.S.Online()
+	num, _ := persistence.S.GetOnline()
 	if err := W.BroadCast(&dto.WSEvent{Event: lottery.WsEventStop, Data: &dto.WSNameResponse{
 		UserRequest: dice(),
 		Competitors: num,
@@ -65,7 +65,7 @@ func lotteryStop(ctx iris.Context) {
 }
 
 func dice() dto.UserRequest {
-	total, list := persistence.S.Online()
+	total, list := persistence.S.GetOnline()
 	winner := rand.Int31n(int32(total))
 	return list[winner]
 }

@@ -12,11 +12,13 @@ func InitDB() (err error) {
 	id SERIAL,
 	dice_id integer,
 	name character varying(254) NOT NULL,
+	avatar character varying(8192) NOT NULL, -- need update
 	uuid character varying(254) NOT NULL,
 	win boolean,
-	CONSTRAINT competitors_pkey PRIMARY KEY (id)
+	CONSTRAINT competitors_pkey PRIMARY KEY (id),
+	CONSTRAINT competitors_name_unique UNIQUE (name) -- need update
 );
-CREATE INDEX IF NOT EXISTS idx_competitors_uuid ON competitors(uuid);`)
+`)
 	if err != nil {
 		return
 	}

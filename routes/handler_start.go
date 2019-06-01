@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/d7561985/1pt_lottery"
 	"github.com/d7561985/1pt_lottery/dto"
 	"github.com/d7561985/1pt_lottery/persistence"
@@ -28,19 +29,26 @@ func start(ctx iris.Context) {
 		return
 	}
 
-	av, err := img.ReadImage(start.Avatar)
+	if persistence.S.FindUser(start.Name) != nil {
+		log.Info().Str("user", start.Name).Msg("already exist")
+		ctx.StatusCode(iris.StatusNotExtended)
+		_, _ = ctx.JSON(&dto.WSEvent{Event: lottery.EventError, Data: fmt.Sprintf("user %s already exist", start.Name)})
+		return
+	}
+
+	_, err := img.ReadImage(start.Avatar)
 	if err != nil {
 		log.Error().Err(err).Msg("decode avatar")
 		ctx.StatusCode(iris.StatusBadRequest)
 		_, _ = ctx.JSON(&dto.WSEvent{Event: lottery.EventError, Data: "error of decoding avatar"})
 		return
 	}
-	avb, err := img.JPEGwithBase64(av, 80)
+	/*avb, err := img.JPEGwithBase64(av, 80)
 	if err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		log.Error().Err(err).Msg("decode image to base64")
 		return
-	}
+	}*/
 
 	id, err := uuid.NewV4()
 	if err != nil {
@@ -49,7 +57,7 @@ func start(ctx iris.Context) {
 		return
 	}
 
-	c := persistence.Competitor{Name: start.Name, UUID: id.String(), Avatar: avb}
+	c := persistence.Competitor{Name: start.Name, UUID: id.String(), Avatar: start.Avatar}
 	if err := c.Create(); err != nil {
 		log.Error().Err(err).Msg("create user")
 		ctx.StatusCode(iris.StatusInternalServerError)
@@ -58,5 +66,5 @@ func start(ctx iris.Context) {
 	// 2h leave cookie
 	ctx.SetCookieKV(lottery.Cookie, id.String())
 	_, _ = ctx.JSON(&dto.StartResponse{UUID: id.String()})
-	log.Info().Str("uuid", id.String()).Msg("start")
+	log.Info().Str("name", c.Name).Str("uuid", id.String()).Msg("start")
 }
