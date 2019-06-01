@@ -95,9 +95,16 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 
 	// listener of any data
 	c.OnMessage(func(b []byte) {
-		log.Info().Str("data", string(b)).Msg("take ws data")
-		if err := w.Emit(c, websocket.All, string(b)); err != nil {
-			log.Error().Err(err).Msg("data send")
+		// no escapes required => use interface unmarshal
+		var i interface{}
+		if err := json.Unmarshal(b, &i); err != nil {
+			log.Error().Err(err).Msg("ws data read")
+			return
+		}
+
+		log.Info().Interface("data", i).Msg("take ws data")
+		if err := w.Emit(c, websocket.All, i); err != nil {
+			log.Error().Err(err).Msg("ws data send")
 		}
 	})
 
