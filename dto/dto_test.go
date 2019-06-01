@@ -16,7 +16,7 @@ func TestStart(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			st := &StartRequest{}
+			st := &UserRequest{}
 			err := json.Unmarshal([]byte(test.json), st)
 			assert.NoError(t, err)
 

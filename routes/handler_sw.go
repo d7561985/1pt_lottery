@@ -71,8 +71,8 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 	if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
 		Event: lottery.WsEventEnter,
 		Data: &dto.WSNameResponse{
-			StartRequest: dto.StartRequest{
-				User:   participant.Name,
+			UserRequest: dto.UserRequest{
+				Name:   participant.Name,
 				Avatar: participant.Avatar,
 			},
 			Competitors: total,
@@ -100,8 +100,8 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 		if err := w.Emit(c, websocket.Broadcast, &dto.WSEvent{
 			Event: lottery.WsEventLeave,
 			Data: &dto.WSNameResponse{
-				StartRequest: dto.StartRequest{
-					User: participant.Name,
+				UserRequest: dto.UserRequest{
+					Name: participant.Name,
 				},
 				Competitors: total,
 			},

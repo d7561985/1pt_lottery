@@ -13,7 +13,7 @@ import (
 
 // POST /api/start
 func start(ctx iris.Context) {
-	start := &dto.StartRequest{}
+	start := &dto.UserRequest{}
 	if err := ctx.ReadJSON(start); err != nil {
 		log.Error().Err(err).Msg("read")
 		ctx.StatusCode(iris.StatusInternalServerError)
@@ -49,7 +49,7 @@ func start(ctx iris.Context) {
 		return
 	}
 
-	c := persistence.Competitor{Name: start.User, UUID: id.String(), Avatar: avb}
+	c := persistence.Competitor{Name: start.Name, UUID: id.String(), Avatar: avb}
 	if err := c.Create(); err != nil {
 		log.Error().Err(err).Msg("create user")
 		ctx.StatusCode(iris.StatusInternalServerError)

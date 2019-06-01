@@ -22,14 +22,14 @@ func (s *Store) Clean() {
 	})
 }
 
-func (s *Store) Online() (num int, res []dto.StartRequest) {
+func (s *Store) Online() (num int, res []dto.UserRequest) {
 	Online.Range(func(key, value interface{}) bool {
 		w, ok := value.(Competitor)
 		if !ok {
 			log.Fatal().Interface("value", value).Msg("cast fail")
 		}
 		num++
-		res = append(res, dto.StartRequest{User: w.Name, Avatar: w.Avatar})
+		res = append(res, dto.UserRequest{Name: w.Name, Avatar: w.Avatar})
 		return true
 	})
 	return
