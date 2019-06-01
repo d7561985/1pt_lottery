@@ -5,7 +5,7 @@ import (
 )
 
 type UserRequest struct {
-	Name   string `json:"name" validate:"required|regex:^[a-zA-Z\u0400-\u04FF ._@]+$" filter:"trim"`
+	Name   string `json:"name" validate:"required|regex:^[0-9a-zA-Z\u0400-\u04FF ._@-]+$" filter:"trim"`
 	Avatar string `json:"avatar,omitempty" validate:"img2"`
 }
 
