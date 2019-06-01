@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"github.com/kataras/iris/core/errors"
 	"github.com/rs/zerolog/log"
 	"image"
 	"image/jpeg"
@@ -11,16 +12,28 @@ import (
 	"strings"
 )
 
+var (
+	errImgData = errors.New("empty image")
+)
+
 // ReadImage in base64 html format with prefix: data:image/png;base64,
-func ReadImage(image string) (image.Image, error) {
-	coI := strings.Index(image, ",")
-	rawImage := string(image)[coI+1:]
+func ReadImage(im string) (image.Image, error) {
+	if len(im) < 20 {
+		return nil, errImgData
+	}
+
+	coI := strings.Index(im, ",")
+	if coI == -1 {
+		return nil, errImgData
+	}
+
+	rawImage := string(im)[coI+1:]
 
 	// Encoded Image DataUrl //
 	unbased, _ := base64.StdEncoding.DecodeString(string(rawImage))
 	res := bytes.NewReader(unbased)
-	f := strings.TrimSuffix(image[5:coI], ";base64")
-	log.Info().Int("size", len(image)).Str("format", f).Msg("read image")
+	f := strings.TrimSuffix(im[5:coI], ";base64")
+	log.Info().Int("size", len(im)).Str("format", f).Msg("read image")
 
 	switch f {
 	case "image/png":
