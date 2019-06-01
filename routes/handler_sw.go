@@ -32,6 +32,7 @@ func init() {
 	W = &WsController{srv}
 	srv.OnConnection(W.handleConnection)
 
+	// server time broadcaster.
 	go func() {
 		c := time.Tick(time.Second * 5)
 		for t := range c {

@@ -21,5 +21,4 @@ func TestClean(t *testing.T) {
 	if counter > 0 {
 		t.Errorf("counter %d", counter)
 	}
-
 }

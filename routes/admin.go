@@ -17,18 +17,6 @@ func competitorsList(ctx iris.Context) {
 	_, _ = ctx.JSON(new(persistence.Competitors).FillByStorage())
 }
 
-func dropDatabase(ctx iris.Context) {
-	// clean storage
-	persistence.S.Clean()
-
-	if err := persistence.Clean(); err != nil {
-		log.Error().Err(err).Msg("dropDatabase")
-		ctx.StatusCode(iris.StatusInternalServerError)
-	}
-	ctx.StatusCode(iris.StatusOK)
-	_, _ = ctx.JSON("OK")
-}
-
 func lotteryBegin(ctx iris.Context) {
 	if Start {
 		ctx.StatusCode(iris.StatusNotAcceptable)

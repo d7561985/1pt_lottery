@@ -26,7 +26,7 @@ func RegisterRoutes(in *router.APIBuilder) {
 		admin := api.Party("/admin", authentication)
 		{
 			admin.Get("/competitors", competitorsList)
-			admin.Delete("/database", dropDatabase)
+			//admin.Delete("/database", dropDatabase)
 			actions := admin.Party("/actions")
 			{
 				actions.Get("/begin", lotteryBegin)
