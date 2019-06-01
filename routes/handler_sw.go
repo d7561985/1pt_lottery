@@ -9,6 +9,7 @@ import (
 	"github.com/kataras/iris/core/errors"
 	"github.com/kataras/iris/websocket"
 	"github.com/rs/zerolog/log"
+	"time"
 )
 
 var (
@@ -30,6 +31,15 @@ func init() {
 
 	W = &WsController{srv}
 	srv.OnConnection(W.handleConnection)
+
+	go func() {
+		c := time.Tick(time.Second * 5)
+		for t := range c {
+			if err := W.BroadCast(&dto.WSEvent{Event: lottery.WSEventServerTime, Data: t}); err != nil {
+				log.Error().Err(err).Msg("time")
+			}
+		}
+	}()
 }
 
 func (w *WsController) Handler() iris.Handler {
