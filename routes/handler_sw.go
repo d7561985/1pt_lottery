@@ -93,6 +93,14 @@ func (w *WsController) handleConnection(c websocket.Connection) {
 	log.Info().Str("name", participant.Name).Str("uuid", participant.UUID).
 		Int("total", total+1).Msg("join")
 
+	// listener of any data
+	c.OnMessage(func(b []byte) {
+		log.Info().Str("data", string(b)).Msg("take ws data")
+		if err := w.Emit(c, websocket.All, string(b)); err != nil {
+			log.Error().Err(err).Msg("data send")
+		}
+	})
+
 	// hook at disconnect
 	c.OnDisconnect(func() {
 		persistence.S.Online.Delete(uid)

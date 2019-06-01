@@ -26,7 +26,7 @@ func (s *Store) Clean() {
 }
 
 func (s *Store) GetOnline() (num int, res []dto.UserRequest) {
-	s.foreach(func(w Competitor) bool {
+	foreach(s.Online, func(w Competitor) bool {
 		num++
 		res = append(res, dto.UserRequest{Name: w.Name, Avatar: w.Avatar})
 		return true
@@ -35,8 +35,8 @@ func (s *Store) GetOnline() (num int, res []dto.UserRequest) {
 }
 
 func (s *Store) FindUser(name string) (res *dto.UserRequest) {
-	s.foreach(func(w Competitor) bool {
-		if w.Name == name {
+	foreach(s.Map, func(w Competitor) bool {
+		if w.Name != name {
 			return true
 		}
 
@@ -46,8 +46,8 @@ func (s *Store) FindUser(name string) (res *dto.UserRequest) {
 	return
 }
 
-func (s *Store) foreach(fn func(Competitor) bool) {
-	s.Online.Range(func(key, value interface{}) bool {
+func foreach(store sync.Map, fn func(Competitor) bool) {
+	store.Range(func(key, value interface{}) bool {
 		w, ok := value.(Competitor)
 		if !ok {
 			log.Fatal().Interface("value", value).Msg("cast fail")
